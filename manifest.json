@@ -1,0 +1,25 @@
+{
+  "manifest_version": 2,
+  "name": "Destylize",
+  "version": "1.0",
+
+  "description": "Converts unicode styled 'fonts' and other forms of expression to accessable and readable plain text",
+
+  "icons": {
+    "48": "icons/destylize-48.png",
+    "96": "icons/destylize-96.png"
+  },
+  
+  "applications": {
+    "gecko": {
+      "id": "destylize@wmww.sh"
+    }
+  },
+
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["src/destylize.js"]
+    }
+  ]
+}
