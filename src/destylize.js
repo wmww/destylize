@@ -1,6 +1,7 @@
 function fix_text(text) {
-    text = text.replace('𝐟', 'f');
-    text = text.replace('𝐨', 'o');
+    for (const c of text) {
+        console.log(c)
+    }
     return text;
 }
 
@@ -15,4 +16,5 @@ function scan_node(node) {
     }
 }
 
+console.log("Started Destylize!");
 scan_node(document.body);
