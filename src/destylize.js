@@ -1,6 +1,12 @@
 function fix_text(text) {
+    replacements = []
     for (const c of text) {
-        console.log(c)
+        if (a = char_map.get(c)) {
+            replacements.push([c, a]);
+        }
+    }
+    for (r of replacements) {
+        text = text.replace(r[0], r[1]);
     }
     return text;
 }
