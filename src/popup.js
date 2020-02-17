@@ -14,6 +14,8 @@ function set_enabled(enabled) {
         toggle.innerHTML = "Start";
     }
     if (enabled != cached_enabled) {
+        console.log("Setting enabled to " + enabled);
+        browser.storage.local.set({enabled: enabled});
         cached_enabled = enabled;
     }
 }
@@ -23,7 +25,12 @@ function enabled_toggled() {
 }
 
 window.onload = function(){
-    set_enabled(cached_enabled);
+    browser.storage.local.get("enabled", value => {
+        let enabled = ("enabled" in value) ? value.enabled : true;
+        console.log("Enabled initially read as " + enabled);
+        cached_enabled = enabled;
+        set_enabled(enabled);
+    });
     let toggle = document.getElementById("enable-toggle");
     toggle.addEventListener("click", enabled_toggled);
 };

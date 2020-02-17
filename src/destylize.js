@@ -22,21 +22,51 @@ function scan_node(node) {
     }
 }
 
-console.log("Started Destylize!");
+function enable() {
+    console.log("Enabled Destylize!");
 
-scan_node(document.body);
+    scan_node(document.body);
 
-const observer = new MutationObserver((mutations) => {
-    mutations.forEach((m) => {
-        if (m.type == "characterData") {
-            scan_node(m.target);
-        }
-        if (m.addedNodes) {
-            for (let node of m.addedNodes) {
-                scan_node(node);
+    const observer = new MutationObserver((mutations) => {
+        mutations.forEach((m) => {
+            if (m.type == "characterData") {
+                scan_node(m.target);
             }
-        }
+            if (m.addedNodes) {
+                for (let node of m.addedNodes) {
+                    scan_node(node);
+                }
+            }
+        });
     });
-});
 
-observer.observe(document.body, {childList: true, subtree: true});
+    observer.observe(document.body, {childList: true, subtree: true});
+}
+
+function disable() {
+    console.log("Disabled Destylize");
+}
+
+function set_enabled(enabled) {
+    if (enabled) {
+        enable();
+    }
+    else {
+        disable();
+    }
+}
+
+function local_storage_change(changes, area) {
+    if (area != "local") {
+        return;
+    }
+
+    if ("enabled" in changes) {
+        if ("newValue" in changes.enabled) {
+            set_enabled(changes.enabled.newValue);
+        }
+    }
+}
+
+browser.storage.onChanged.addListener(local_storage_change);
+browser.storage.local.get("enabled", value => set_enabled(value.enabled));
