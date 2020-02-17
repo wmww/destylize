@@ -26,5 +26,16 @@
         "src/destylize.js"
       ]
     }
-  ]
+  ],
+
+  "browser_action": {
+    "browser_style": true,
+    "default_popup": "src/popup.html",
+    "default_icon": {
+      "16": "icons/destylize-16.png",
+      "32": "icons/destylize-32.png",
+      "48": "icons/destylize-48.png",
+      "96": "icons/destylize-96.png"
+    }
+  }
 }
