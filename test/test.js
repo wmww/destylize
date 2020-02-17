@@ -5,70 +5,125 @@ class ConversionTest {
         this.paragraph = document.createElement("p");
         this.text_node = document.createTextNode(this.original);
         this.paragraph.appendChild(this.text_node);
-        this.added_to_div = false;
     }
 
     describe() {
         return "Conversion test '" + this.original + "'";
     }
 
-    add_to_div(parent_div) {
-        if (this.added_to_div) {
-            console.warn(this.describe() + " added to div multiple times");
-        }
-        parent_div.appendChild(this.paragraph);
-        this.added_to_div = true;
+    get_content() {
+        return this.paragraph;
     }
 
     // returns true if the test passes, or false if it doesn't
-    verify_correct() {
-        if (!this.added_to_div) {
-            console.error(this.describe() + " not added to div");
-        }
-
-        if (this.text_node.textContent === this.correct) {
-            console.log(this.describe() + " passed");
-            this.paragraph.style.backgroundColor = "green";
-            return true;
-        }
-        else {
+    check_if_passed() {
+        const passed = this.text_node.textContent === this.correct;
+        if (!passed) {
             console.error(this.describe() + " failed! ('" + this.text_node.textContent + "' != '" + this.correct + "')");
-            this.paragraph.style.backgroundColor = "red";
-            return false;
         }
+        return passed;
     }
 };
+
+class TestManager {
+    constructor(test) {
+        this.test = test;
+        this.added_to_doc = false;
+    }
+
+    add_to_doc(table) {
+        if (this.added_to_doc) {
+            console.warn(this.test.describe() + " added to document multiple times");
+        }
+        const content = this.test.get_content();
+        this.row = table.insertRow(-1);
+        this.status_cell = this.row.insertCell(-1);
+        this.content_cell = this.row.insertCell(-1);
+        this.content_cell.appendChild(content);
+        this.status_cell.innerHTML = "⏱";
+        this.added_to_doc = true;
+    }
+
+    check_if_passed() {
+        if (!this.added_to_doc) {
+            console.error(this.test.describe() + " not added to document");
+            return false
+        }
+        const passed = this.test.check_if_passed();
+        if (passed) {
+            this.status_cell.innerHTML = "✅";
+        }
+        else {
+            this.status_cell.innerHTML = "❌";
+        }
+        return passed;
+    }
+}
+
+class Stats {
+    constructor(node) {
+        this.node = node;
+        this.passed = 0;
+        this.count = 0;
+        this.node.textContent = "Loading…";
+    }
+
+    add_test(passed) {
+        this.count++;
+        if (passed) {
+            this.passed++;
+        }
+    }
+
+    update() {
+        let percent = 0;
+        if (this.count > 0) {
+            percent = Math.round((this.passed / this.count) * 100);
+        }
+        let str = "Passed " + this.passed.toString() + "/" + this.count.toString() + " (" + percent.toString() + "%)";
+        this.node.textContent = str;
+        if (this.count == this.passed) {
+            this.node.style.color = "green";
+        }
+        else
+        {
+            this.node.style.color = "red";
+        }
+    }
+}
 
 const tests = [
     new ConversionTest("No change to normal A$CII text!", "No change to normal A$CII text!"),
     new ConversionTest("🆂🆀🆄🅰🆁🅴 🅱🅾🆇🅴🆂", "SQUARE BOXES"),
+    new ConversionTest("𝑾𝒉𝒚 do ʸᵒᵘ 𝓱𝓪𝓽𝓮  🅰🅴🆂🆃🅷🅴🆃🅸🅲🆂", "Why do You hate  AESTHETICS"),
+        // source: https://mobile.twitter.com/FakeUnicode/status/1192622398580805632
 ];
 
-function sleep(ms) {
-  return new Promise(resolve => setTimeout(resolve, ms));
-}
+const managers = tests.map(test => new TestManager(test));
+
+let stats;
 
 function init() {
-    test_div = document.getElementById("allTests");
-    if (!test_div) {
-        console.error("Failed to find test div");
-        return;
-    }
-    for (let test of tests) {
-        test.add_to_div(test_div);
+    stats_node = document.getElementById("test-stats");
+    stats = new Stats(stats_node);
+    test_table = document.getElementById("all-tests");
+    for (const manager of managers) {
+        manager.add_to_doc(test_table);
     }
 }
 
-function run_tests() {
-    for (let test of tests) {
-        test.verify_correct();
-    }
+function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
 }
 
 window.onload = function(){
     init();
     console.log("Waiting for destylize to run…");
     sleep(1000).then(() => {
-        run_tests();
+        for (const manager of managers) {
+            stats.add_test(manager.check_if_passed());
+        }
+        stats.update();
+        console.log("…done");
     });
 };
