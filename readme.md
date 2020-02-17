@@ -1,5 +1,5 @@
 # Destylize
-A work-in-progress browser extensionn to replace stylized unicode "fonts" with accessible ASCII text
+A work-in-progress browser extension to replace stylized Unicode "fonts" with accessible ASCII text
 
 ## Problem
 Many social media sites and other platforms don't let users select the font or otherwise customize their posts. For this reason, it has become popular to replace normal ASCII characters with Unicode equivalents of a given style. Text can be made to look bold, italic or hand-written this way, but the system isn't perfect. Particularly, it introduces problems for accessibility tools and older devices which don't support such characters, or expect them to have a different meaning.
