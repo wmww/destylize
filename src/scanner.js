@@ -36,14 +36,24 @@ class Scanner {
                 }
             });
         });
+        this.enabled = false;
     }
 
     enable() {
+        if (this.enabled) {
+            return;
+        }
         // initial scan
         scan_node(document.body);
         this.observer.observe(document.body, {childList: true, subtree: true});
+        this.enabled = true;
     }
 
     disable() {
+        if (!this.enabled) {
+            return;
+        }
+        this.observer.disconnect();
+        this.enabled = false;
     }
 }
