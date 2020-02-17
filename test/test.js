@@ -25,6 +25,83 @@ class ConversionTest {
     }
 };
 
+class InputAreaUnchangedTest {
+    constructor() {
+        this.text = "🅸🅽🅿🆄🆃 🅰🆁🅴🅰";
+        this.input_area = document.createElement("INPUT");
+        this.input_area.setAttribute("type", "text");
+        this.input_area.value = this.text;
+    }
+
+    describe() {
+        return "Input area unchanged test";
+    }
+
+    get_content() {
+        return this.input_area;
+    }
+
+    // returns true if the test passes, or false if it doesn't
+    check_if_passed() {
+        const passed = this.input_area.value === this.text;
+        if (!passed) {
+            console.error(this.describe() + " failed!");
+        }
+        return passed;
+    }
+};
+
+class TextAreaUnchangedTest {
+    constructor() {
+        this.text = "🅸🅽🅿🆄🆃 🅰🆁🅴🅰";
+        this.text_area = document.createElement("TEXTAREA"); ;
+        this.text_area.value = this.text;
+    }
+
+    describe() {
+        return "Text area unchanged test";
+    }
+
+    get_content() {
+        return this.text_area;
+    }
+
+    // returns true if the test passes, or false if it doesn't
+    check_if_passed() {
+        const passed = this.text_area.value === this.text;
+        if (!passed) {
+            console.error(this.describe() + " failed!");
+        }
+        return passed;
+    }
+};
+
+class HTMLTextAreaUnchangedTest {
+    constructor() {
+        this.correct = "🆃🅴🆇🆃 🅰🆁🅴🅰";
+        this.node = null
+    }
+
+    describe() {
+        return "HTML text area unchanged test";
+    }
+
+    get_content() {
+        this.node = document.getElementById('test-text-area');
+        this.node.remove();
+        return this.node;
+    }
+
+    // returns true if the test passes, or false if it doesn't
+    check_if_passed() {
+        const passed = this.node.value === this.correct;
+        if (!passed) {
+            console.error(this.describe() + " failed!");
+        }
+        return passed;
+    }
+};
+
 class TestManager {
     constructor(test) {
         this.test = test;
@@ -97,6 +174,9 @@ const tests = [
     new ConversionTest("🆂🆀🆄🅰🆁🅴 🅱🅾🆇🅴🆂", "SQUARE BOXES"),
     new ConversionTest("𝑾𝒉𝒚 do ʸᵒᵘ 𝓱𝓪𝓽𝓮  🅰🅴🆂🆃🅷🅴🆃🅸🅲🆂", "Why do You hate  AESTHETICS"),
         // source: https://mobile.twitter.com/FakeUnicode/status/1192622398580805632
+    new InputAreaUnchangedTest(),
+    new TextAreaUnchangedTest(),
+    new HTMLTextAreaUnchangedTest(),
 ];
 
 const managers = tests.map(test => new TestManager(test));
