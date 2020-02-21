@@ -11,32 +11,36 @@ function fix_text(text) {
     return text;
 }
 
-function scan_node(node) {
-    if (node.nodeType == Node.TEXT_NODE) {
-        // Don't replace in text entry areas
-        if (!node.parentNode || node.parentNode.nodeName != "TEXTAREA") {
-            node.textContent = fix_text(node.textContent);
-        }
-    } else {
-        node.childNodes.forEach(scan_node);
-    }
-}
-
 class Scanner {
     constructor() {
         this.observer = new MutationObserver((mutations) => {
-            mutations.forEach((m) => {
+            for (let i = 0; i < mutations.length; i++) {
+                let m = mutations[i];
                 if (m.type == "characterData") {
-                    scan_node(m.target);
+                    this.scan_node(m.target);
                 }
                 if (m.addedNodes) {
                     for (let node of m.addedNodes) {
-                        scan_node(node);
+                        this.scan_node(node);
                     }
                 }
-            });
+            }
         });
         this.enabled = false;
+    }
+
+    scan_node(node) {
+        if (node.nodeType == Node.TEXT_NODE) {
+            // Don't replace in text entry areas
+            if (!node.parentNode || node.parentNode.nodeName != "TEXTAREA") {
+                node.textContent = fix_text(node.textContent);
+            }
+        } else {
+            for (let i = 0; i < node.childNodes.length; i++) {
+                let child = node.childNodes[i];
+                this.scan_node(child);
+            }
+        }
     }
 
     enable() {
@@ -44,7 +48,7 @@ class Scanner {
             return;
         }
         // initial scan
-        scan_node(document.body);
+        this.scan_node(document.body);
         this.observer.observe(document.body, {childList: true, subtree: true});
         this.enabled = true;
     }
