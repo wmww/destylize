@@ -103,68 +103,57 @@ class HTMLTextAreaUnchangedTest {
 };
 
 class TestManager {
-    constructor(test) {
+    constructor(test, table) {
         this.test = test;
-        this.added_to_doc = false;
-    }
-
-    add_to_doc(table) {
-        if (this.added_to_doc) {
-            console.warn(this.test.describe() + " added to document multiple times");
-        }
+        this.did_pass = null;
         const content = this.test.get_content();
         this.row = table.insertRow(-1);
         this.status_cell = this.row.insertCell(-1);
         this.content_cell = this.row.insertCell(-1);
         this.content_cell.appendChild(content);
         this.status_cell.innerHTML = "⏱";
-        this.added_to_doc = true;
     }
 
-    check_if_passed() {
-        if (!this.added_to_doc) {
-            console.error(this.test.describe() + " not added to document");
-            return false
+    passed() {
+        let passed_this_time = this.test.check_if_passed();
+        if (passed_this_time !== this.did_pass) {
+            if (passed_this_time) {
+                this.status_cell.innerHTML = "✅";
+            }
+            else {
+                this.status_cell.innerHTML = "❌";
+            }
         }
-        const passed = this.test.check_if_passed();
-        if (passed) {
-            this.status_cell.innerHTML = "✅";
-        }
-        else {
-            this.status_cell.innerHTML = "❌";
-        }
-        return passed;
+        this.did_pass = passed_this_time;
+        return this.did_pass;
     }
 }
 
 class Stats {
-    constructor(node) {
-        this.node = node;
-        this.passed = 0;
-        this.count = 0;
-        this.node.textContent = "Loading…";
+    constructor(stats_node, table_node) {
+        this.stats_node = stats_node;
+        this.table_node = table_node
+        this.tests = []
+        this.stats_node.textContent = "Loading…";
     }
 
-    add_test(passed) {
-        this.count++;
-        if (passed) {
-            this.passed++;
-        }
+    add_test(test) {
+        this.tests.push(new TestManager(test, this.table_node));
     }
 
     update() {
-        let percent = 0;
-        if (this.count > 0) {
-            percent = Math.round((this.passed / this.count) * 100);
-        }
-        let str = "Passed " + this.passed.toString() + "/" + this.count.toString() + " (" + percent.toString() + "%)";
-        this.node.textContent = str;
-        if (this.count == this.passed) {
-            this.node.style.color = "green";
+        const count = this.tests.length;
+        const sum_passed_tests = (acc, test) => acc + (test.passed() ? 1 : 0)
+        const passed = this.tests.reduce(sum_passed_tests, 0);
+        const percent = count > 0 ? Math.round((passed / count) * 100) : 0;
+        const str = "Passed " + passed.toString() + "/" + count.toString() + " tests (" + percent.toString() + "%)";
+        this.stats_node.textContent = str;
+        if (count == passed) {
+            this.stats_node.style.color = "green";
         }
         else
         {
-            this.node.style.color = "red";
+            this.stats_node.style.color = "red";
         }
     }
 }
@@ -179,17 +168,13 @@ const tests = [
     new HTMLTextAreaUnchangedTest(),
 ];
 
-const managers = tests.map(test => new TestManager(test));
-
 let stats;
 
 function init() {
     stats_node = document.getElementById("test-stats");
-    stats = new Stats(stats_node);
-    test_table = document.getElementById("all-tests");
-    for (const manager of managers) {
-        manager.add_to_doc(test_table);
-    }
+    table_node = document.getElementById("all-tests");
+    stats = new Stats(stats_node, table_node);
+    tests.forEach(test => stats.add_test(test));
 }
 
 function sleep(ms) {
@@ -200,9 +185,6 @@ window.onload = function(){
     init();
     console.log("Waiting for destylize to run…");
     sleep(1000).then(() => {
-        for (const manager of managers) {
-            stats.add_test(manager.check_if_passed());
-        }
         stats.update();
         console.log("…done");
     });
