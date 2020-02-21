@@ -25,9 +25,12 @@ class Scanner {
                     }
                 }
             }
+            this.replacements_may_have_changed();
         });
         this.enabled = false;
-        this.replacements = 0;
+        this.cached_replacements = null;
+        this.replacements = null;
+        this.on_replacements_change = function(){};
     }
 
     scan_node(node) {
@@ -54,9 +57,11 @@ class Scanner {
             return;
         }
         // initial scan
+        this.replacements = 0;
         this.scan_node(document.body);
         this.observer.observe(document.body, {childList: true, subtree: true});
         this.enabled = true;
+        this.replacements_may_have_changed();
     }
 
     disable() {
@@ -65,14 +70,28 @@ class Scanner {
         }
         this.observer.disconnect();
         this.enabled = false;
-        if (this.replacements > 0) {
+        if (this.replacements) {
             location.reload(true);
-            this.replacements = 0;
+        }
+        this.replacements = null;
+        this.replacements_may_have_changed();
+    }
+
+    replacements_may_have_changed() {
+        if (this.cached_replacements !== this.replacements) {
+            this.on_replacements_change();
+            this.cached_replacements = this.replacements;
         }
     }
 
     send_replacement_count() {
-        const count = this.enabled ? this.replacements : null;
-        browser.runtime.sendMessage({what: "replacements", replacements: count});
+        this.on_replacements_change = function() {
+            browser.runtime.sendMessage({what: "replacements", replacements: this.replacements});
+        };
+        this.on_replacements_change();
+    }
+
+    halt_replacement_count() {
+        this.on_replacements_change = function(){};
     }
 }

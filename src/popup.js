@@ -1,7 +1,8 @@
 let cached_enabled = true;
 let replacements = null;
+let active_tab_id = null;
 
-browser.runtime.onMessage.addListener(message => {
+function process_message(message) {
     switch (message.what) {
         case "replacements":
             replacements = message.replacements;
@@ -11,7 +12,7 @@ browser.runtime.onMessage.addListener(message => {
         default:
             break;
     }
-});
+}
 
 function update() {
     let status = document.getElementById("status");
@@ -41,24 +42,29 @@ function update() {
     }
 }
 
-function request_replacement_count() {
+function request_send_status_updates() {
     browser.tabs.query({
         currentWindow: true,
         active: true
     }).then(tabs => {
         if (tabs.length > 0) {
-            browser.tabs.sendMessage(tabs[0].id, {what: "request_status"});
+            active_tab_id = tabs[0].id;
+            browser.tabs.sendMessage(active_tab_id, {what: "send_status_updates"});
         }
     });
 }
 
+function request_halt_status_updates() {
+    browser.tabs.sendMessage(active_tab_id, {what: "halt_status_updates"});
+    active_tab_id = null;
+}
+
 function set_enabled(enabled) {
     if (enabled != cached_enabled) {
-        console.log("Setting enabled to " + enabled);
         browser.storage.local.set({enabled: enabled});
         cached_enabled = enabled;
-        request_replacement_count();
         update();
+        request_send_status_updates(); // if enabling/disabling triggers a reload, updates will stop
     }
 }
 
@@ -68,7 +74,10 @@ function enabled_toggled() {
 
 window.onload = function(){
     update();
-    request_replacement_count();
+    request_send_status_updates();
+
+    browser.runtime.onMessage.addListener(process_message);
+
     browser.storage.local.get("enabled", value => {
         let enabled = ("enabled" in value) ? value.enabled : true;
         console.log("Enabled initially read as " + enabled);
@@ -78,3 +87,9 @@ window.onload = function(){
     let toggle = document.getElementById("enable-toggle");
     toggle.addEventListener("click", enabled_toggled);
 };
+
+window.onUnload = function(){
+    browser.runtime.onMessage.removeListener(process_message);
+    request_halt_status_updates();
+    replacements = null;
+}

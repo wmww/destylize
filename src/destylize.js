@@ -2,8 +2,12 @@ const scanner = new Scanner();
 
 browser.runtime.onMessage.addListener(message => {
     switch (message.what) {
-        case "request_status":
+        case "send_status_updates":
             scanner.send_replacement_count();
+            break;
+
+        case "halt_status_updates":
+            scanner.halt_replacement_count();
             break;
 
         default:
