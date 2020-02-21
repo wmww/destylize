@@ -3,7 +3,7 @@
   "name": "Destylize",
   "version": "1.0",
 
-  "description": "Converts unicode styled 'fonts' and other forms of expression to accessable and readable plain text",
+  "description": "Converts Unicode styled 'fonts' to accessible and readable plain text",
 
   "icons": {
     "16": "icons/destylize-16.png",
