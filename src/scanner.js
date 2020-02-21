@@ -59,5 +59,6 @@ class Scanner {
         }
         this.observer.disconnect();
         this.enabled = false;
+        location.reload(true);
     }
 }
