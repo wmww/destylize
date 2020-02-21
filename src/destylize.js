@@ -1,5 +1,16 @@
 const scanner = new Scanner();
 
+browser.runtime.onMessage.addListener(message => {
+    switch (message.what) {
+        case "request_status":
+            scanner.send_replacement_count();
+            break;
+
+        default:
+            break;
+    }
+});
+
 function set_enabled(enabled) {
     if (enabled) {
         scanner.enable();

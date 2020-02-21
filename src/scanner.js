@@ -27,13 +27,19 @@ class Scanner {
             }
         });
         this.enabled = false;
+        this.replacements = 0;
     }
 
     scan_node(node) {
         if (node.nodeType == Node.TEXT_NODE) {
             // Don't replace in text entry areas
             if (!node.parentNode || node.parentNode.nodeName != "TEXTAREA") {
-                node.textContent = fix_text(node.textContent);
+                const text = node.textContent;
+                const fixed = fix_text(text);
+                if (text !== fixed) {
+                    node.textContent = fixed;
+                    this.replacements++;
+                }
             }
         } else {
             for (let i = 0; i < node.childNodes.length; i++) {
@@ -59,6 +65,14 @@ class Scanner {
         }
         this.observer.disconnect();
         this.enabled = false;
-        location.reload(true);
+        if (this.replacements > 0) {
+            location.reload(true);
+            this.replacements = 0;
+        }
+    }
+
+    send_replacement_count() {
+        const count = this.enabled ? this.replacements : null;
+        browser.runtime.sendMessage({what: "replacements", replacements: count});
     }
 }
