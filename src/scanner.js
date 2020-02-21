@@ -5,10 +5,15 @@ function fix_text(text) {
             replacements.push([c, a]);
         }
     }
-    for (let r of replacements) {
-        text = text.replace(r[0], r[1]);
+    if (replacements.length) {
+        for (let r of replacements) {
+            text = text.replace(r[0], r[1]);
+        }
+        return text;
     }
-    return text;
+    else {
+        return null;
+    }
 }
 
 class Scanner {
@@ -37,9 +42,8 @@ class Scanner {
         if (node.nodeType == Node.TEXT_NODE) {
             // Don't replace in text entry areas
             if (!node.parentNode || node.parentNode.nodeName != "TEXTAREA") {
-                const text = node.textContent;
-                const fixed = fix_text(text);
-                if (text !== fixed) {
+                const fixed = fix_text(node.textContent);
+                if (fixed !== null) {
                     node.textContent = fixed;
                     this.replacements++;
                 }
