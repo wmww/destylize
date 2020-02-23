@@ -21,12 +21,12 @@ function update() {
 
     if (cached_enabled) {
         status.innerHTML = "running";
-        status.style.color = "green";
+        status.className = "running";
         toggle.innerHTML = "Stop";
     }
     else {
         status.innerHTML = "not running"
-        status.style.color = "red";
+        status.className = "not-running";
         toggle.innerHTML = "Start";
     }
 
@@ -36,8 +36,8 @@ function update() {
     else {
         counter.style.display = "block";
         counter.innerHTML =
-        "Fixed <b>" + replacements.toString() +
-        "</b> element" + (replacements == 1 ? "" : "s") +
+        "Fixed <span id='elements-fixed'>" + replacements.toString() +
+        "</span> element" + (replacements == 1 ? "" : "s") +
         " on this page";
     }
 }
