@@ -1,14 +1,21 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
+  <meta charset="UTF-8">
+  <link rel="stylesheet" type="text/css" href="/css/popup-style.css">
+  <script src="popup.js" defer></script>
 </head>
-<body style="font-family:'sans-serif'">
-    <div style="width: 300px">
-        <h1 style="font-size:150%;">Destylize</h1>
-        <p>Status: <b id="status">…</b></p>
-        <p id="counter">…</p>
-        <button type="button" id="enable-toggle" onclick="enabled_toggled()">…</button>
-        <script src="popup.js"></script>
+<body>
+  <div class="column-container">
+    <h1 class="title">Destylize</h1>
+    <div class="row-container" id="status-text">
+      Current status: <span id="status"></span>
     </div>
+    <div class="row-container">
+      <p id="counter">…</p>
+    </div> 
+    <div class="row-container" id="toggle-button-container"> 
+      <button type="button" id="enable-toggle" onclick="enabled_toggled()">Start</button>
+    </div>
+  </div>
 </body>

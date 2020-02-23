@@ -1,0 +1,65 @@
+html, body {
+  width:400px; /* Sets width of popup */
+  background-color:#ffffff;
+  font-family:sans-serif;
+}
+
+.column-container {
+  display:flex;
+  flex-direction:column;
+  align-content:center;
+  padding:1em;
+}
+
+.row-container {
+  display:flex;
+  flex-direction:row;
+  justify-content:center;
+  padding:1em;
+}
+
+.title {
+  text-align:center;
+  color:#0ba6aa;
+}
+
+.running {
+  color:#0ba6aa;
+}
+
+.not-running {
+  color:orange;
+}
+
+#status-text {
+  font-size:1.5em;
+  text-align:center;
+}
+
+#status {
+  font-weight:bold;
+  margin-left:0.3em;
+}
+
+#toggle-button-container button {
+  margin: 0 auto;
+  background-color:#0ba6aa;
+  border:1px solid #0a8488;
+  box-shadow:3px 3px 3px #cdcdcd;
+  text-align:center;
+  width:50%;
+  font-size:1.2em;
+  font-weight:bold;
+  color:white;
+  padding:1em;
+}
+
+#toggle-button-container button:hover {
+  cursor:pointer;
+  background-color:#0a9599;
+}
+
+#elements-fixed {
+  font-weight:bold;
+  color:#0ba6aa;
+}
