@@ -41,9 +41,11 @@ class Scanner {
     scan_node(node) {
         if (node.nodeType == Node.TEXT_NODE) {
             // Don't replace in text entry areas
-            if (!node.parentNode || node.parentNode.nodeName != "TEXTAREA") {
+            const parent_node_name = node.parentNode ? node.parentNode.nodeName : "";
+            if (parent_node_name != "TEXTAREA" && parent_node_name != "SCRIPT") {
                 const fixed = fix_text(node.textContent);
                 if (fixed !== null) {
+                    // console.log("(parent: " + node.parentNode.nodeName + ") Changed '" + node.textContent + "' to '" + fixed + "'");
                     node.textContent = fixed;
                     this.replacements++;
                 }
