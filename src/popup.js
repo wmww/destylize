@@ -31,10 +31,10 @@ function update() {
     }
 
     if (replacements === null) {
-        counter.style.display = "none";
+        counter.style.visibility = "hidden";
     }
     else {
-        counter.style.display = "block";
+        counter.style.visibility = "visible";
         counter.innerHTML =
         "Fixed <span id='elements-fixed'>" + replacements.toString() +
         "</span> element" + (replacements == 1 ? "" : "s") +
