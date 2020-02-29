@@ -19,6 +19,7 @@ find . \
     -not -path './test*' \
     -not -path './scripts*' \
     -not -name 'destylize-400.png' \
+    -not -name 'destylize-chrome.png' \
     -not -name 'example_text.png' \
     -not -name 'screenshot_*.png' \
     -not -name '*.kra' \
