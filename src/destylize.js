@@ -1,6 +1,6 @@
 const scanner = new Scanner();
 
-browser.runtime.onMessage.addListener(message => {
+chrome.runtime.onMessage.addListener(message => {
     switch (message.what) {
         case "send_status_updates":
             scanner.send_replacement_count();
@@ -38,6 +38,6 @@ function local_storage_change(changes, area) {
     }
 }
 
-browser.storage.onChanged.addListener(local_storage_change);
-browser.storage.local.get("enabled", value => set_enabled(value.enabled));
+chrome.storage.onChanged.addListener(local_storage_change);
+chrome.storage.local.get("enabled", value => set_enabled(value.enabled));
 console.log("Destylize initialized");

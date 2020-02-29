@@ -90,7 +90,7 @@ class Scanner {
 
     send_replacement_count() {
         this.on_replacements_change = function() {
-            browser.runtime.sendMessage({what: "replacements", replacements: this.replacements});
+            chrome.runtime.sendMessage({what: "replacements", replacements: this.replacements});
         };
         this.on_replacements_change();
     }
