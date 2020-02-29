@@ -1,21 +1,22 @@
 html, body {
-  width:400px; /* Sets width of popup */
+  width:360px; /* Sets width of popup */
   background-color:#ffffff;
   font-family:sans-serif;
+  font-size:12pt;
 }
 
 .column-container {
   display:flex;
   flex-direction:column;
   align-content:center;
-  padding:1em;
+  padding:0.75em;
 }
 
 .row-container {
   display:flex;
   flex-direction:row;
   justify-content:center;
-  padding:1em;
+  padding:0.5em;
 }
 
 .title {
@@ -32,7 +33,7 @@ html, body {
 }
 
 #status-text {
-  font-size:1.5em;
+  font-size:1.25em;
   text-align:center;
 }
 
@@ -42,16 +43,16 @@ html, body {
 }
 
 #toggle-button-container button {
-  margin: 0 auto;
+  margin:1em;
   background-color:#0ba6aa;
   border:1px solid #0a8488;
   box-shadow:3px 3px 3px #cdcdcd;
   text-align:center;
   width:50%;
-  font-size:1.2em;
+  font-size:1.25em;
   font-weight:bold;
   color:white;
-  padding:1em;
+  padding:0.5em;
 }
 
 #toggle-button-container button:hover {
