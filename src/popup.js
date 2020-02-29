@@ -55,8 +55,10 @@ function request_send_status_updates() {
 }
 
 function request_halt_status_updates() {
-    chrome.tabs.sendMessage(active_tab_id, {what: "halt_status_updates"});
-    active_tab_id = null;
+    if (active_tab_id) {
+        chrome.tabs.sendMessage(active_tab_id, {what: "halt_status_updates"});
+        active_tab_id = null;
+    }
 }
 
 function set_enabled(enabled) {
