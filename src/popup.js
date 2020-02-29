@@ -43,25 +43,25 @@ function update() {
 }
 
 function request_send_status_updates() {
-    browser.tabs.query({
+    chrome.tabs.query({
         currentWindow: true,
         active: true
-    }).then(tabs => {
+    }, tabs => {
         if (tabs.length > 0) {
             active_tab_id = tabs[0].id;
-            browser.tabs.sendMessage(active_tab_id, {what: "send_status_updates"});
+            chrome.tabs.sendMessage(active_tab_id, {what: "send_status_updates"});
         }
     });
 }
 
 function request_halt_status_updates() {
-    browser.tabs.sendMessage(active_tab_id, {what: "halt_status_updates"});
+    chrome.tabs.sendMessage(active_tab_id, {what: "halt_status_updates"});
     active_tab_id = null;
 }
 
 function set_enabled(enabled) {
     if (enabled != cached_enabled) {
-        browser.storage.local.set({enabled: enabled});
+        chrome.storage.local.set({enabled: enabled});
         cached_enabled = enabled;
         update();
         request_send_status_updates(); // if enabling/disabling triggers a reload, updates will stop
@@ -76,9 +76,9 @@ window.onload = function(){
     update();
     request_send_status_updates();
 
-    browser.runtime.onMessage.addListener(process_message);
+    chrome.runtime.onMessage.addListener(process_message);
 
-    browser.storage.local.get("enabled", value => {
+    chrome.storage.local.get("enabled", value => {
         let enabled = ("enabled" in value) ? value.enabled : true;
         console.log("Enabled initially read as " + enabled);
         cached_enabled = enabled;
@@ -89,7 +89,7 @@ window.onload = function(){
 };
 
 window.onUnload = function(){
-    browser.runtime.onMessage.removeListener(process_message);
+    chrome.runtime.onMessage.removeListener(process_message);
     request_halt_status_updates();
     replacements = null;
 }
