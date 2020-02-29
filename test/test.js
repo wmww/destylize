@@ -102,6 +102,34 @@ class HTMLTextAreaUnchangedTest {
     }
 };
 
+class InlineScriptUnchangedTest {
+    constructor() {
+        this.node = document.createTextNode("Boxed T from inline script unchanged");
+    }
+
+    describe() {
+        return "Inline script test";
+    }
+
+    get_content() {
+        return this.node;
+    }
+
+    // returns true if the test passes, or false if it doesn't
+    check_if_passed() {
+        const script = document.getElementById("inline-script");
+        if (script.textContent.search("inline_script_value") < 0) {
+            console.error(this.describe() + " failed, failed to find normal ASCII text in script");
+            return false;
+        }
+        if (script.textContent.search("🆃") < 0) {
+            console.error(this.describe() + " failed, failed to find boxed T in script");
+            return false;
+        }
+        return true;
+    }
+};
+
 class TestManager {
     constructor(test, table) {
         this.test = test;
@@ -166,6 +194,7 @@ const tests = [
     new InputAreaUnchangedTest(),
     new TextAreaUnchangedTest(),
     new HTMLTextAreaUnchangedTest(),
+    new InlineScriptUnchangedTest(),
 ];
 
 let stats;
