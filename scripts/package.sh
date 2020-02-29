@@ -24,4 +24,5 @@ find . \
     -not -name 'screenshot_*.png' \
     -not -name '*.kra' \
     -not -name '*~' \
+    -not -path './store_description.md' \
     | xargs zip "$ZIP_DEST"
