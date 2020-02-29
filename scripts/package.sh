@@ -20,6 +20,7 @@ find . \
     -not -path './scripts*' \
     -not -name 'destylize-400.png' \
     -not -name 'example_text.png' \
+    -not -name 'screenshot_*.png' \
     -not -name '*.kra' \
     -not -name '*~' \
     | xargs zip "$ZIP_DEST"
