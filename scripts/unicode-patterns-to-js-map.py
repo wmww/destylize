@@ -4,13 +4,16 @@ import sys
 from collections import OrderedDict
 import unicodedata
 
+def is_ascii(char):
+    return ord(char) <= 127
+
 def verify_mapping(unicode_chr, ascii_chr):
     assert isinstance(unicode_chr, str)
     assert isinstance(ascii_chr, str)
     assert len(unicode_chr) == 1
     assert len(ascii_chr) == 1
-    assert ord(unicode_chr) > 127
-    assert ord(ascii_chr) <= 127
+    assert not is_ascii(unicode_chr)
+    assert is_ascii(ascii_chr)
 
 def js_map_element(unicode_chr, ascii_chr):
     '''returns a string containing a JS list [unicode, ascii]'''
@@ -85,9 +88,23 @@ def unique(flat_map):
             print('\'' + i[0] + '\' (' + hex(ord(i[0])) + ') maps to both \'' + i[1] + '\' and \'' + seen[i[0]] + '\'', file=sys.stderr)
     return [(k, v) for k, v in seen.items()]
 
+def remove_diacritics(flat_map):
+    result = []
+    for uni, asc in flat_map:
+        add = True
+        norm = unicodedata.normalize('NFKD', uni) # Split diacritics from base letters
+        if (len(norm) == 2 and
+            unicodedata.category(norm[1]) == 'Mn' and # Is a diacritic, I guess?
+            is_ascii(norm[0])):
+            add = False
+        if add:
+            result.append((uni, asc))
+    return result
+
 if __name__ == '__main__':
     flat_map = []
     for path in sys.argv[1:]:
         flat_map += parse_file(path)
     flat_map = unique(flat_map)
+    flat_map = remove_diacritics(flat_map)
     print(js_map(flat_map))
