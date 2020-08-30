@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 
 import sys
+from collections import OrderedDict
+import unicodedata
 
 def verify_mapping(unicode_chr, ascii_chr):
     assert isinstance(unicode_chr, str)
@@ -36,7 +38,7 @@ def parse_block(block):
     for i in range(len(chars)):
         ascii_val = i + 32
         if len(chars[i]) != 1:
-            print('Block "' + block + '" has multicharacter unicode "' + chars[i] + '"', file=sys.stderr)
+            print('Multicharacter unicode "' + chars[i] + '"', file=sys.stderr)
         elif ord(chars[i]) > 127:
             mapping.append((chars[i], chr(ascii_val)))
     return mapping
@@ -58,16 +60,30 @@ def parse_file(path):
     assert isinstance(path, str)
     return parse(open(path).read(), path)
 
+def is_capital(char):
+    if 'CAPITAL' in unicodedata.name(char):
+        return True
+    elif 'SMALL' in unicodedata.name(char):
+        return False
+    # More heuristics can go here
+    else:
+        return False
+
 def unique(flat_map):
-    seen = {}
-    result = []
+    seen = OrderedDict()
     for i in flat_map:
         if i[0] not in seen:
             seen[i[0]] = i[1]
-            result.append(i)
-        elif seen[i[0]] != i[1]:
+        elif seen[i[0]] == i[1]:
+            pass
+        elif seen[i[0]].lower() == i[1].lower():
+            if is_capital(i[0]):
+                seen[i[0]] = i[1].upper()
+            else:
+                seen[i[0]] = i[1].lower()
+        else:
             print('\'' + i[0] + '\' (' + hex(ord(i[0])) + ') maps to both \'' + i[1] + '\' and \'' + seen[i[0]] + '\'', file=sys.stderr)
-    return result
+    return [(k, v) for k, v in seen.items()]
 
 if __name__ == '__main__':
     flat_map = []
