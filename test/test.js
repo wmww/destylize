@@ -25,6 +25,32 @@ class ConversionTest {
     }
 };
 
+class NoConversionTest {
+    constructor(text) {
+        this.text = text;
+        this.paragraph = document.createElement("p");
+        this.text_node = document.createTextNode(this.text);
+        this.paragraph.appendChild(this.text_node);
+    }
+
+    describe() {
+        return "Already correct test '" + this.text + "'";
+    }
+
+    get_content() {
+        return this.paragraph;
+    }
+
+    // returns true if the test passes, or false if it doesn't
+    check_if_passed() {
+        const passed = this.text_node.textContent === this.text;
+        if (!passed) {
+            console.error(this.describe() + " failed! ('" + this.text_node.textContent + "' != '" + this.text + "')");
+        }
+        return passed;
+    }
+};
+
 class InputAreaUnchangedTest {
     constructor() {
         this.text = "🅸🅽🅿🆄🆃 🅰🆁🅴🅰";
@@ -191,6 +217,8 @@ const tests = [
     new ConversionTest("🆂🆀🆄🅰🆁🅴 🅱🅾🆇🅴🆂", "SQUARE BOXES"),
     new ConversionTest("𝑾𝒉𝒚 do ʸᵒᵘ 𝓱𝓪𝓽𝓮  🅰🅴🆂🆃🅷🅴🆃🅸🅲🆂", "Why do You hate  AESTHETICS"),
         // source: https://mobile.twitter.com/FakeUnicode/status/1192622398580805632
+    new NoConversionTest("diacritics: Üüéàï"),
+    new NoConversionTest("eñe: Ññ"),
     new InputAreaUnchangedTest(),
     new TextAreaUnchangedTest(),
     new HTMLTextAreaUnchangedTest(),
