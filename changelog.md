@@ -2,7 +2,11 @@
 
 ## [Unreleased]
 
-## [1.2] - Aug 31, 2020
+## [1.2] - Sep 1, 2020
+- Correctly enabled by default on install
+- Fixed 'Sometimes falsely shows "running"' (#16)
+- Stopped setting .innerHTML
+- Stopped converting money symbols
 - Stopped converting diacritics
 - Smarter about detecting if letter should be upper/lower case
 
