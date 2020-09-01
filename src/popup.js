@@ -86,9 +86,8 @@ window.onload = function(){
 
     chrome.runtime.onMessage.addListener(process_message);
 
-    chrome.storage.local.get("enabled", value => {
-        let enabled = ("enabled" in value) ? value.enabled : true;
-        set_enabled(enabled);
+    chrome.storage.local.get({"enabled": true}, value => {
+        set_enabled(value.enabled);
     });
     let toggle = document.getElementById("enable-toggle");
     toggle.addEventListener("click", enabled_toggled);
