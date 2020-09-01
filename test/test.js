@@ -165,17 +165,17 @@ class TestManager {
         this.status_cell = this.row.insertCell(-1);
         this.content_cell = this.row.insertCell(-1);
         this.content_cell.appendChild(content);
-        this.status_cell.innerHTML = "⏱";
+        this.status_cell.textContent = "⏱";
     }
 
     passed() {
         let passed_this_time = this.test.check_if_passed();
         if (passed_this_time !== this.did_pass) {
             if (passed_this_time) {
-                this.status_cell.innerHTML = "✅";
+                this.status_cell.textContent = "✅";
             }
             else {
-                this.status_cell.innerHTML = "❌";
+                this.status_cell.textContent = "❌";
             }
         }
         this.did_pass = passed_this_time;

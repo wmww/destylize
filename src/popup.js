@@ -35,10 +35,10 @@ function update() {
     }
     else {
         counter.style.visibility = "visible";
-        counter.innerHTML =
-        "Fixed <span id='elements-fixed'>" + replacements.toString() +
-        "</span> element" + (replacements == 1 ? "" : "s") +
-        " on this page";
+        document.getElementById("elements-fixed-prefix").textContent = "Fixed ";
+        document.getElementById("elements-fixed").textContent = replacements.toString();
+        document.getElementById("elements-fixed-suffix").textContent = (
+            " element" + (replacements == 1 ? "" : "s") + " on this page");
     }
 }
 
