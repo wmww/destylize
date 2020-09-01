@@ -1,6 +1,12 @@
-let cached_enabled = true;
-let replacements = null;
+let cached_enabled = null;
+let replacements = 0;
 let active_tab_id = null;
+
+function checkLastError(response) {
+    if (browser.runtime.lastError) {
+        console.error(`Error: ${browser.runtime.lastError}`);
+    }
+}
 
 function process_message(message) {
     switch (message.what) {
@@ -23,22 +29,19 @@ function update() {
         status.innerHTML = "running";
         status.className = "running";
         toggle.innerHTML = "Stop";
-    }
-    else {
-        status.innerHTML = "not running"
-        status.className = "not-running";
-        toggle.innerHTML = "Start";
-    }
 
-    if (replacements === null) {
-        counter.style.visibility = "hidden";
-    }
-    else {
         counter.style.visibility = "visible";
         document.getElementById("elements-fixed-prefix").textContent = "Fixed ";
         document.getElementById("elements-fixed").textContent = replacements.toString();
         document.getElementById("elements-fixed-suffix").textContent = (
             " element" + (replacements == 1 ? "" : "s") + " on this page");
+    }
+    else {
+        status.innerHTML = "not running"
+        status.className = "not-running";
+        toggle.innerHTML = "Start";
+
+        counter.style.visibility = "hidden";
     }
 }
 
@@ -49,21 +52,23 @@ function request_send_status_updates() {
     }, tabs => {
         if (tabs.length > 0) {
             active_tab_id = tabs[0].id;
-            chrome.tabs.sendMessage(active_tab_id, {what: "send_status_updates"});
+            chrome.tabs.sendMessage(active_tab_id, {what: "send_status_updates"}, checkLastError);
         }
     });
 }
 
 function request_halt_status_updates() {
     if (active_tab_id) {
-        chrome.tabs.sendMessage(active_tab_id, {what: "halt_status_updates"});
+        chrome.tabs.sendMessage(active_tab_id, {what: "halt_status_updates"}, checkLastError);
         active_tab_id = null;
     }
 }
 
 function set_enabled(enabled) {
-    if (enabled != cached_enabled) {
-        chrome.storage.local.set({enabled: enabled});
+    if (enabled !== cached_enabled) {
+        if (cached_enabled !== null) {
+            chrome.storage.local.set({enabled: enabled});
+        }
         cached_enabled = enabled;
         update();
         request_send_status_updates(); // if enabling/disabling triggers a reload, updates will stop
@@ -75,6 +80,7 @@ function enabled_toggled() {
 }
 
 window.onload = function(){
+    cached_enabled = null
     update();
     request_send_status_updates();
 
@@ -82,8 +88,6 @@ window.onload = function(){
 
     chrome.storage.local.get("enabled", value => {
         let enabled = ("enabled" in value) ? value.enabled : true;
-        console.log("Enabled initially read as " + enabled);
-        cached_enabled = enabled;
         set_enabled(enabled);
     });
     let toggle = document.getElementById("enable-toggle");
