@@ -35,13 +35,34 @@ function update() {
         document.getElementById("elements-fixed").textContent = replacements.toString();
         document.getElementById("elements-fixed-suffix").textContent = (
             " element" + (replacements == 1 ? "" : "s") + " on this page");
+
+		chrome.browserAction.setIcon({
+  			path: {
+				"16": "../icons/destylize-16.png",
+				"32": "../icons/destylize-32.png",
+				"48": "../icons/destylize-48.png",
+				"96": "../icons/destylize-96.png"
+
+  			}
+		});
+ 
     }
     else {
         status.innerHTML = "not running"
         status.className = "not-running";
         toggle.innerHTML = "Start";
 
-        counter.style.visibility = "hidden";
+       	counter.style.visibility = "hidden";
+ 
+		chrome.browserAction.setIcon({
+  			path: {
+				"16": "../icons/destylize-gray-16.png",
+				"32": "../icons/destylize-gray-32.png",
+				"48": "../icons/destylize-gray-48.png",
+				"96": "../icons/destylize-gray-96.png"
+
+  			}
+		});
     }
 }
 
