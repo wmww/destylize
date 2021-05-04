@@ -36,31 +36,31 @@ function update() {
         document.getElementById("elements-fixed-suffix").textContent = (
             " element" + (replacements == 1 ? "" : "s") + " on this page");
 
-		chrome.browserAction.setIcon({
-  			path: {
-				"16": "../icons/destylize-16.png",
-				"32": "../icons/destylize-32.png",
-				"48": "../icons/destylize-48.png",
-				"96": "../icons/destylize-96.png"
-  			}
-		});
- 
+        chrome.browserAction.setIcon({
+            path: {
+                "16": "../icons/destylize-16.png",
+                "32": "../icons/destylize-32.png",
+                "48": "../icons/destylize-48.png",
+                "96": "../icons/destylize-96.png"
+            }
+        });
+
     }
     else {
         status.innerHTML = "not running"
         status.className = "not-running";
         toggle.innerHTML = "Start";
 
-       	counter.style.visibility = "hidden";
- 
-		chrome.browserAction.setIcon({
-  			path: {
-				"16": "../icons/destylize-gray-16.png",
-				"32": "../icons/destylize-gray-32.png",
-				"48": "../icons/destylize-gray-48.png",
-				"96": "../icons/destylize-gray-96.png"
-  			}
-		});
+        counter.style.visibility = "hidden";
+
+        chrome.browserAction.setIcon({
+            path: {
+                "16": "../icons/destylize-gray-16.png",
+                "32": "../icons/destylize-gray-32.png",
+                "48": "../icons/destylize-gray-48.png",
+                "96": "../icons/destylize-gray-96.png"
+            }
+        });
     }
 }
 
@@ -71,14 +71,14 @@ function request_send_status_updates() {
     }, tabs => {
         if (tabs.length > 0) {
             active_tab_id = tabs[0].id;
-            chrome.tabs.sendMessage(active_tab_id, {what: "send_status_updates"}, checkLastError);
+            chrome.tabs.sendMessage(active_tab_id, { what: "send_status_updates" }, checkLastError);
         }
     });
 }
 
 function request_halt_status_updates() {
     if (active_tab_id) {
-        chrome.tabs.sendMessage(active_tab_id, {what: "halt_status_updates"}, checkLastError);
+        chrome.tabs.sendMessage(active_tab_id, { what: "halt_status_updates" }, checkLastError);
         active_tab_id = null;
     }
 }
@@ -86,7 +86,7 @@ function request_halt_status_updates() {
 function set_enabled(enabled) {
     if (enabled !== cached_enabled) {
         if (cached_enabled !== null) {
-            chrome.storage.local.set({enabled: enabled});
+            chrome.storage.local.set({ enabled: enabled });
         }
         cached_enabled = enabled;
         update();
@@ -98,21 +98,21 @@ function enabled_toggled() {
     set_enabled(!cached_enabled);
 }
 
-window.onload = function(){
+window.onload = function () {
     cached_enabled = null
     update();
     request_send_status_updates();
 
     chrome.runtime.onMessage.addListener(process_message);
 
-    chrome.storage.local.get({"enabled": true}, value => {
+    chrome.storage.local.get({ "enabled": true }, value => {
         set_enabled(value.enabled);
     });
     let toggle = document.getElementById("enable-toggle");
     toggle.addEventListener("click", enabled_toggled);
 };
 
-window.onUnload = function(){
+window.onUnload = function () {
     chrome.runtime.onMessage.removeListener(process_message);
     request_halt_status_updates();
     replacements = null;
