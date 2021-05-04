@@ -42,7 +42,6 @@ function update() {
 				"32": "../icons/destylize-32.png",
 				"48": "../icons/destylize-48.png",
 				"96": "../icons/destylize-96.png"
-
   			}
 		});
  
@@ -60,7 +59,6 @@ function update() {
 				"32": "../icons/destylize-gray-32.png",
 				"48": "../icons/destylize-gray-48.png",
 				"96": "../icons/destylize-gray-96.png"
-
   			}
 		});
     }
