@@ -4,7 +4,8 @@ import sys
 from collections import OrderedDict
 import unicodedata
 
-blacklist = set(['£', '€'])
+blacklist_unicode = set(['£', '€'])
+blacklist_ascii = set(['*'])
 
 def is_ascii(char):
     return ord(char) <= 127
@@ -99,7 +100,9 @@ def remove_invalid(flat_map):
             unicodedata.category(norm[1]) == 'Mn' and # Is a diacritic, I guess?
             is_ascii(norm[0])):
             add = False
-        if uni in blacklist:
+        if uni in blacklist_unicode:
+            add = False
+        if asc in blacklist_ascii:
             add = False
         if add:
             result.append((uni, asc))
