@@ -1,10 +1,22 @@
 #!/usr/bin/env python3
 
 import sys
+import re
 from collections import OrderedDict
 import unicodedata
 
-blacklist = set(['£', '€'])
+# Modified from https://stackoverflow.com/a/49146722/4327513
+# This isn't a perfect solution, but it just has to catch all the emoji in the input data
+blacklist_unicode = re.compile(r'['
+    u'£€'
+    u'\U0001F600-\U0001F64F'  # emoji (emoticons)
+    u'\U0001F300-\U0001F5FF'  # emoji (symbols & pictographs)
+    u'\U0001F680-\U0001F6FF'  # emoji (transport & map symbols)
+    r']+', flags=re.UNICODE)
+
+blacklist_ascii = re.compile(r'['
+    r'*'
+    r']+');
 
 def is_ascii(char):
     return ord(char) <= 127
@@ -97,10 +109,13 @@ def remove_invalid(flat_map):
         norm = unicodedata.normalize('NFKD', uni) # Split diacritics from base letters
         if (len(norm) == 2 and
             unicodedata.category(norm[1]) == 'Mn' and # Is a diacritic, I guess?
-            is_ascii(norm[0])):
+            is_ascii(norm[0])
+        ):
             add = False
-        if uni in blacklist:
+
+        if blacklist_unicode.match(uni) or blacklist_ascii.match(asc):
             add = False
+
         if add:
             result.append((uni, asc))
     return result

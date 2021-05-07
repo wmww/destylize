@@ -219,8 +219,11 @@ const tests = [
         // source: https://mobile.twitter.com/FakeUnicode/status/1192622398580805632
     new ConversionTest('Should be lower case: ₖ𝑒', 'Should be lower case: ke'),
     new ConversionTest('Should be upper case: 🅐Ｍ𝐗', 'Should be upper case: AMX'),
+    new ConversionTest('zachary: ᘔꪖᥴꫝꪖ᥅ꪗ', 'zachary: zachary'),
     new NoConversionTest("diacritics: Üüéàï"),
     new NoConversionTest("eñe: Ññ"),
+    new NoConversionTest('emoji: 🍑🍩💙😍💍🍪'),
+    new NoConversionTest('asterisk-like: ✴✾✷✬'),
     new NoConversionTest("Money symbols: $£€"),
     new InputAreaUnchangedTest(),
     new TextAreaUnchangedTest(),
