@@ -221,7 +221,7 @@ const tests = [
     new ConversionTest('Should be upper case: 🅐Ｍ𝐗', 'Should be upper case: AMX'),
     new NoConversionTest("diacritics: Üüéàï"),
     new NoConversionTest("eñe: Ññ"),
-    new NoConversionTest('emoji: 🍑🍩💙'),
+    new NoConversionTest('emoji: 🍑🍩💙😍💍🍪'),
     new NoConversionTest('asterisk-like: ✴✾✷✬'),
     new NoConversionTest("Money symbols: $£€"),
     new InputAreaUnchangedTest(),
