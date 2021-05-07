@@ -222,6 +222,7 @@ const tests = [
     new NoConversionTest("diacritics: Üüéàï"),
     new NoConversionTest("eñe: Ññ"),
     new NoConversionTest('emoji: 🍑🍩💙'),
+    new NoConversionTest('asterisk-like: ✴✾✷✬'),
     new NoConversionTest("Money symbols: $£€"),
     new InputAreaUnchangedTest(),
     new TextAreaUnchangedTest(),
