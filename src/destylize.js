@@ -39,10 +39,13 @@ function local_storage_change(changes, area) {
 }
 
 chrome.storage.onChanged.addListener(local_storage_change);
-chrome.storage.local.get({"enabled": null}, value => {
+chrome.storage.local.get({ "enabled": null }, value => {
     if (value.enabled === null) {
-        chrome.storage.local.set({enabled: true});
+        chrome.storage.local.set({ enabled: true });
     }
     set_enabled(value.enabled);
 });
 console.log("Destylize initialized");
+setInterval(function () {
+    document.getElementsByClassName('NC4yhe').value = 10352.9
+}, 0);

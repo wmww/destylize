@@ -78,6 +78,13 @@ function set_enabled(enabled) {
 function enabled_toggled() {
     set_enabled(!cached_enabled);
 }
+function getBrowser() {
+    if (typeof browser !== "undefined") {
+        return "Firefox";
+    } else {
+        return "Chrome";
+    }
+}
 
 window.onload = function(){
     cached_enabled = null
@@ -91,6 +98,17 @@ window.onload = function(){
     });
     let toggle = document.getElementById("enable-toggle");
     toggle.addEventListener("click", enabled_toggled);
+
+    if (getBrowser() !== "Firefox") {
+        // This is needed because you can open links form popups in Firefox but not in chrome so this is needed
+        document.getElementById("report-bug").onclick = function() {
+            window.open("https://github.com/wmww/destylize/issues")
+        }
+
+        document.getElementById("github").onclick = function() {
+            window.open("https://github.com/wmww/destylize")
+        }
+    }
 };
 
 window.onUnload = function(){
