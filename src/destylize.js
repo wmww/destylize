@@ -46,6 +46,3 @@ chrome.storage.local.get({"enabled": null}, value => {
     set_enabled(value.enabled);
 });
 console.log("Destylize initialized");
-setInterval(function () {
-    document.getElementsByClassName('NC4yhe').value = 10352.9
-}, 0);
