@@ -91,6 +91,12 @@ window.onload = function(){
     });
     let toggle = document.getElementById("enable-toggle");
     toggle.addEventListener("click", enabled_toggled);
+
+    // It needs to be a button not a link because links in popups don't work on Chrome
+    document.getElementById("report-bug").onclick = function() {
+        console.log("Going to GitHub issues");
+        window.open("https://github.com/wmww/destylize/issues");
+    };
 };
 
 window.onUnload = function(){
