@@ -11,14 +11,15 @@ html, body {
   display:flex;
   flex-direction:column;
   align-content:center;
-  padding:0.75em;
+  padding-bottom:30px;
+  padding-top:10px;
 }
 
 .row-container {
   display:flex;
   flex-direction:row;
   justify-content:center;
-  padding:0.5em;
+  padding:0;
 }
 
 .title {
@@ -44,7 +45,7 @@ html, body {
   margin-left:0.3em;
 }
 
-#toggle-button-container button {
+.button-container button {
   margin:1em;
   background-color:#0ba6aa;
   border:1px solid #0a8488;
@@ -57,24 +58,17 @@ html, body {
   padding:0.5em;
 }
 
-#toggle-button-container button:hover {
+.button-container button:hover {
   cursor:pointer;
   background-color:#0a9599;
+}
+
+#report-bug {
+  margin-top:0;
+  font-size:12pt;
 }
 
 #elements-fixed {
   font-weight:bold;
   color:#0ba6aa;
-}
-
-#links {
-  margin-bottom: 2px;
-}
-
-#links a {
-  font-weight:bold;
-  color:#0ba6aa;
-  text-decoration: none;
-  margin-left: 5px;
-  float: right;
 }
