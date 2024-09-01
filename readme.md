@@ -1,7 +1,7 @@
 # Destylize
 A browser extension to replace stylized Unicode "fonts" with accessible ASCII text
 
-[Install on Firefox](https://addons.mozilla.org/en-US/firefox/addon/destylize/)
+[Install on Firefox](https://addons.mozilla.org/firefox/addon/destylize/)
 
 [Install on Chrome](https://chrome.google.com/webstore/detail/ailchnlcihmbjhdikpfmeclpejbaggcp)
 
